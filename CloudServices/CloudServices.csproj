@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\Notification\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK" Version="2.3.55.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
