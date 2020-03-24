@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK" Version="2.3.55.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="4.1.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
@@ -19,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="appSettings - Azure.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="appSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
