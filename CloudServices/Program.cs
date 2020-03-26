@@ -1,5 +1,4 @@
 ﻿using CloudServices.Common;
-using CloudServices.Services.DocumentDB;
 using CloudServices.Services.Queue;
 using System;
 
@@ -14,13 +13,18 @@ namespace CloudServices
             if (!string.IsNullOrEmpty(cloud))
             {
                 Console.WriteLine($"Start Service in Cloud : { cloud }");
-                var storageService = 1;
-                var documentService = DocumentDBServiceFactory.Create();
-                var queueService = QueueServiceFactory.Create();
-                queueService.SendMessage("olá to na azure 123");
+                QueueTest();
+                Console.WriteLine("Finishing Tests");
             }
             else
                 Console.WriteLine("Bad AppSettings.json");
+        }
+
+        private static void QueueTest()
+        {
+            Console.WriteLine("Start Queue Tests Azure - Service || AWS - SQS");
+            var queueService = QueueServiceFactory.Create();
+            queueService.SendMessage($"Hello cloud { DateTime.Now.ToString() }");
         }
     }
 }

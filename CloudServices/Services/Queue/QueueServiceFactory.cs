@@ -17,7 +17,7 @@ namespace CloudServices.Services.Queue
                     return new AzureServiceBus();
 
                 default:
-                    return null;
+                    return new AmazonSimpleQueue();
             }
 
         }

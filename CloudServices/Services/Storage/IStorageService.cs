@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Drawing;
 using System.IO;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace CloudServices.Services.Storage
 {
