@@ -19,7 +19,6 @@ namespace CloudServices.Services.Storage
         {
             var appRegionName = AppSettingsHelper.GetConfig("AWSRegionName");
             var endPoint = RegionEndpoint.GetBySystemName(appRegionName);
-
             return new AmazonS3Client(endPoint);
         }
 
@@ -32,7 +31,7 @@ namespace CloudServices.Services.Storage
             if (!BucketExists(bucketName))
             {
                 throw new Exception(string.Format("The bucket {0} does not exist.", bucketName));
-            }
+            }                
 
             var putRequest = new PutObjectRequest
             {
@@ -42,13 +41,23 @@ namespace CloudServices.Services.Storage
                 Key = Key(directoryPath, objectName)
             };
 
-            using (var client = DefaultAmazonClient())
+            try
             {
-                var response = client.PutObject(putRequest);
-
-                if (response.HttpStatusCode != HttpStatusCode.OK)
+                using (var client = DefaultAmazonClient())
                 {
-                    throw new Exception(string.Format("Error on upload {0}", objectName));
+                    var response = client.PutObject(putRequest);
+
+                    if (response.HttpStatusCode != HttpStatusCode.OK)
+                    {
+                        throw new Exception(string.Format("Error on upload {0}", objectName));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex?.Message.Contains("Cannot access a disposed object") == false)
+                {
+                    throw ex;
                 }
             }
         }
