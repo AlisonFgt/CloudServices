@@ -15,6 +15,14 @@ namespace CloudServices.Services.Storage
 {
     public class S3StorageService : IStorageService
     {
+        private static IAmazonS3 DefaultAmazonClient()
+        {
+            var appRegionName = AppSettingsHelper.GetConfig("AWSRegionName");
+            var endPoint = RegionEndpoint.GetBySystemName(appRegionName);
+
+            return new AmazonS3Client(endPoint);
+        }
+
         public void UploadByPath(string bucketNameAndDirPath, string objectName, string filePath)
         {
             var bucketNameAndPath = GetBucketNameAndPath(bucketNameAndDirPath);
@@ -160,13 +168,7 @@ namespace CloudServices.Services.Storage
             }
         }
 
-        private static IAmazonS3 DefaultAmazonClient()
-        {
-            var appRegionName = AppSettingsHelper.GetConfig("AWSRegionName");
-            var endPoint = RegionEndpoint.GetBySystemName(appRegionName);
-
-            return new AmazonS3Client(endPoint);
-        }
+        
 
         internal virtual string Key(string directoryPath, string fileName)
         {

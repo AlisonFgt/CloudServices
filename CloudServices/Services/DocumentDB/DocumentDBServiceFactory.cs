@@ -1,5 +1,4 @@
 ﻿using CloudServices.Common;
-using System.Configuration;
 
 namespace CloudServices.Services.DocumentDB
 {
