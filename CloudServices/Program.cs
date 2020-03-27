@@ -16,14 +16,15 @@ namespace CloudServices
             if (!string.IsNullOrEmpty(cloud))
             {
                 Console.WriteLine($"Start Service in Cloud : { cloud }");
-                StorageTest(cloud);
+                //StorageTest();
+                QueueTest();
                 Console.WriteLine("Finishing Tests");
             }
             else
                 Console.WriteLine("Bad AppSettings.json");
         }
 
-        private static void StorageTest(string cloud)
+        private static void StorageTest()
         {
             Console.WriteLine("Start Storage Tests Azure - Blob Storage || AWS - S3");
             var pathProject = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
@@ -55,9 +56,14 @@ namespace CloudServices
 
         private static void QueueTest()
         {
+            string _queueName = AppSettingsHelper.GetConfig("QueueName");
+
             Console.WriteLine("Start Queue Tests Azure - Service Bus || AWS - SQS");
             var queueService = QueueServiceFactory.Create();
             queueService.SendMessage($"Hello cloud { DateTime.Now.ToString() }");
+            var msg = queueService.GetMessage(_queueName);
+            Console.WriteLine(msg.Body);
+            queueService.DeleteMessage(_queueName);
         }
     }
 }
