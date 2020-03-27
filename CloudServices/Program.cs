@@ -11,8 +11,6 @@ namespace CloudServices
     {
         static void Main(string[] args)
         {
-            //var teste = new UploadObjectTest();
-
             string cloud = AppSettingsHelper.GetCloud();
 
             if (!string.IsNullOrEmpty(cloud))

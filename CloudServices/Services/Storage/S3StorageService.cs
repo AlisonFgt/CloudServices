@@ -92,17 +92,26 @@ namespace CloudServices.Services.Storage
                 Key = Key(splittedName.Value, objectName)
             };
 
-            using (var client = DefaultAmazonClient())
+            try
             {
-                var response = client.PutObject(putRequest);
-
-                if (response.HttpStatusCode != HttpStatusCode.OK)
+                using (var client = DefaultAmazonClient())
                 {
-                    throw new Exception(string.Format("Error on upload {0}", objectName));
+                    var response = client.PutObject(putRequest);
+
+                    if (response.HttpStatusCode != HttpStatusCode.OK)
+                    {
+                        throw new Exception(string.Format("Error on upload {0}", objectName));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex?.Message.Contains("Cannot access a disposed object") == false)
+                {
+                    throw ex;
                 }
             }
         }
-
         public void Delete(string bucketNameAndDirPath, string objectName)
         {
             var splittedName = GetBucketNameAndPath(bucketNameAndDirPath);
@@ -115,9 +124,19 @@ namespace CloudServices.Services.Storage
 
             var key = Key(splittedName.Value, objectName);
 
-            using (var client = DefaultAmazonClient())
+            try
             {
-                client.DeleteObject(bucketName, key);
+                using (var client = DefaultAmazonClient())
+                {
+                    client.DeleteObject(bucketName, key);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex?.Message.Contains("Cannot access a disposed object") == false)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -176,8 +195,6 @@ namespace CloudServices.Services.Storage
                 objectResponse.ResponseStream.Close();
             }
         }
-
-        
 
         internal virtual string Key(string directoryPath, string fileName)
         {
