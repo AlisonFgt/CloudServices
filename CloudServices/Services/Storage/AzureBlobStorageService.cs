@@ -55,12 +55,13 @@ namespace CloudServices.Services.Storage
         public Image GetImage(string containerName, string blobName)
         {
             var cloudBlockBlob = GetBlobInContainer(containerName, blobName);
-            cloudBlockBlob.Properties.ContentType = "image/jpg";
+            cloudBlockBlob.Properties.ContentType = "image/" + ImageHelper.GetImageFormat(blobName).ToString().Trim().ToLower();
             cloudBlockBlob.SetPropertiesAsync().GetAwaiter();
 
             using (var memoryStream = new MemoryStream())
             {
-                cloudBlockBlob.DownloadToStreamAsync(memoryStream).GetAwaiter();
+                cloudBlockBlob.DownloadToStreamAsync(memoryStream).GetAwaiter().GetResult();
+                memoryStream.Seek(0, SeekOrigin.Begin);
                 return Image.FromStream(memoryStream);
             }
         }
@@ -73,17 +74,18 @@ namespace CloudServices.Services.Storage
 
         public string GetUrl(string containerName, string blobName, int expireDays)
         {
-            var cloudBlockBlob = GetBlobInContainer(containerName, blobName);
-            var sharedAccess = new SharedAccessBlobPolicy
-            {
-                SharedAccessStartTime = DateTime.Now,
-                SharedAccessExpiryTime = DateTime.Now.AddDays(expireDays),
-                Permissions = SharedAccessBlobPermissions.Read
-            };
+            return GetUrl(containerName, blobName);
 
-            cloudBlockBlob.GetSharedAccessSignature(sharedAccess);
+            //var cloudBlockBlob = GetBlobInContainer(containerName, blobName);
+            //var sharedAccess = new SharedAccessBlobPolicy
+            //{
+            //    SharedAccessExpiryTime = DateTime.UtcNow.AddDays(expireDays),
+            //    Permissions = SharedAccessBlobPermissions.Write | SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Create
+            //};
 
-            return cloudBlockBlob.Uri.AbsoluteUri;
+            //var sasToken = cloudBlockBlob.Container.GetSharedAccessSignature(sharedAccess);
+
+            //return cloudBlockBlob.Uri.AbsoluteUri + sasToken;
         }
 
         public void UploadByHttpPostedFile(string containerName, string blobName, IFormFile file)
