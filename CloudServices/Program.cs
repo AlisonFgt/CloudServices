@@ -3,6 +3,7 @@ using CloudServices.Services.Queue;
 using CloudServices.Services.Storage;
 using System;
 using System.IO;
+using System.Text;
 
 namespace CloudServices
 {
@@ -42,6 +43,15 @@ namespace CloudServices
             storageService.UploadByImage(containerName, fileNametwo, image);
             Console.WriteLine("Upload file two" + fileNametwo);
             Console.WriteLine("Url file two = " + storageService.GetUrl(containerName, fileNametwo));
+            MemoryStream msWrite = new MemoryStream(Encoding.UTF8.GetBytes("Agora estou na AWS & Azure"));
+            msWrite.Position = 0;
+            using (msWrite)
+            {
+                storageService.UploadByStream(containerName, "File.txt", msWrite);
+            }
+            Console.WriteLine("UploadByStream to File.txt");
+            storageService.Download(containerName, "File.txt", Path.Combine(pathProject, "FilesTests/File_2.txt"));
+            Console.WriteLine("Download to File.txt");
             storageService.Delete(containerName, fileNametwo);
         }
 

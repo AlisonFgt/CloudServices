@@ -49,18 +49,18 @@ namespace CloudServices.Services.Storage
         public void Download(string containerName, string blobName, string fileToDownloadTo)
         {
             var cloudBlockBlob = GetBlobInContainer(containerName, blobName);
-            cloudBlockBlob.DownloadToFileAsync(fileToDownloadTo, FileMode.Create).GetAwaiter();
+            cloudBlockBlob.DownloadToFileAsync(fileToDownloadTo, FileMode.Create).Wait();
         }
 
         public Image GetImage(string containerName, string blobName)
         {
             var cloudBlockBlob = GetBlobInContainer(containerName, blobName);
             cloudBlockBlob.Properties.ContentType = "image/" + ImageHelper.GetImageFormat(blobName).ToString().Trim().ToLower();
-            cloudBlockBlob.SetPropertiesAsync().GetAwaiter();
+            cloudBlockBlob.SetPropertiesAsync().Wait();
 
             using (var memoryStream = new MemoryStream())
             {
-                cloudBlockBlob.DownloadToStreamAsync(memoryStream).GetAwaiter().GetResult();
+                cloudBlockBlob.DownloadToStreamAsync(memoryStream).Wait();
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 return Image.FromStream(memoryStream);
             }
@@ -91,13 +91,13 @@ namespace CloudServices.Services.Storage
         public void UploadByHttpPostedFile(string containerName, string blobName, IFormFile file)
         {
             var cloudBlockBlob = GetBlobInContainer(containerName, blobName);
-            cloudBlockBlob.UploadFromStreamAsync(file.OpenReadStream());
+            cloudBlockBlob.UploadFromStreamAsync(file.OpenReadStream()).Wait();
         }
 
         public void UploadByImage(string containerName, string blobName, Image image)
         {
             var cloudBlockBlob = GetBlobInContainer(containerName, blobName);
-            cloudBlockBlob.UploadFromStreamAsync(image.ToStream(ImageHelper.GetImageFormat(blobName))).GetAwaiter();
+            cloudBlockBlob.UploadFromStreamAsync(image.ToStream(ImageHelper.GetImageFormat(blobName))).Wait();
         }
 
         public void UploadByPath(string containerName, string fileNameCloud, string filePathName)
@@ -118,7 +118,7 @@ namespace CloudServices.Services.Storage
             var containerReference = cloudBlobClient.GetContainerReference(containerName);
             try
             {
-                containerReference.FetchAttributesAsync().GetAwaiter();
+                containerReference.FetchAttributesAsync().Wait();
                 return true;
             }
             catch (Exception)
