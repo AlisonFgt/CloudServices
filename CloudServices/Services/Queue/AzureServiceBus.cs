@@ -65,7 +65,7 @@ namespace CloudServices.Services.Queue
             }
         }
 
-        public bool DeleteMessage(string queue)
+        public bool DeleteMessage(string queue, string receiptHandle = "")
         {
             try
             {

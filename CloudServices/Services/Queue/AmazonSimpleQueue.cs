@@ -29,13 +29,14 @@ namespace CloudServices.Services.Queue
             }
         }
 
-        public Model.Queue GetQueueUrl(string name)
+        public Model.Queue GetQueueUrl(string queueName)
         {
             try
             {
+                string _queueName = GetQueueNameByURL(queueName);
                 using (var client = GetClient())
                 {
-                    var responseQueueUrl = client.GetQueueUrl(name);
+                    var responseQueueUrl = client.GetQueueUrl(_queueName);
 
                     if (responseQueueUrl == null)
                     {
@@ -44,7 +45,7 @@ namespace CloudServices.Services.Queue
 
                     return new Model.Queue
                     {
-                        Name = name,
+                        Name = _queueName,
                         Url = responseQueueUrl.QueueUrl
                     };
                 }
@@ -54,6 +55,11 @@ namespace CloudServices.Services.Queue
                 Console.WriteLine("AmazonSimpleQueue - GetQueueUrl - " + ex?.Message);
                 return null;
             }
+        }
+
+        private static string GetQueueNameByURL(string queueName)
+        {
+            return queueName.Split('/')?.Length > 0 ? queueName.Split('/')[queueName.Split('/').Length - 1] : queueName;
         }
 
         public bool SendMessage(string message)
@@ -113,9 +119,20 @@ namespace CloudServices.Services.Queue
             return null;
         }
 
-        public bool DeleteMessage(string queue)
+        public bool DeleteMessage(string queue, string receiptHandle = "")
         {
-            throw new NotImplementedException();
+            try
+            {
+                var client = GetClient();
+                var queueUrl = client.GetQueueUrl(GetQueueNameByURL(queue));
+                client.DeleteMessage(queueUrl.QueueUrl, receiptHandle);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("AzureServiceBus - DeleteMessage - " + ex?.Message);
+                return false;
+            }
         }
     }
 }

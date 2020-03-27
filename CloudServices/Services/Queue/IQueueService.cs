@@ -7,6 +7,6 @@ namespace CloudServices.Services.Queue
 
         Model.Message GetMessage(string queue);
 
-        bool DeleteMessage(string queue);
+        bool DeleteMessage(string queue, string receiptHandle = "");
     }
 }
