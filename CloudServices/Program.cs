@@ -1,4 +1,5 @@
 ﻿using CloudServices.Common;
+using CloudServices.Services.DocumentDB;
 using CloudServices.Services.Queue;
 using CloudServices.Services.Storage;
 using System;
@@ -17,11 +18,23 @@ namespace CloudServices
             {
                 Console.WriteLine($"Start Service in Cloud : { cloud }");
                 //StorageTest();
-                QueueTest();
+                //QueueTest();
+                DocumentDBTest();
                 Console.WriteLine("Finishing Tests");
             }
             else
                 Console.WriteLine("Bad AppSettings.json");
+        }
+
+        private static void DocumentDBTest()
+        {
+            Console.WriteLine("Start Queue Tests Azure - Service Bus || AWS - SQS");
+            var documentoDBService = DocumentDBServiceFactory.Create();
+            documentoDBService.
+            Console.WriteLine("Send Message!");
+            Console.WriteLine("Get Message!");
+            Console.WriteLine(msg.Body);
+            Console.WriteLine("Deleted Message!");
         }
 
         private static void StorageTest()
@@ -60,8 +73,8 @@ namespace CloudServices
 
             Console.WriteLine("Start Queue Tests Azure - Service Bus || AWS - SQS");
             var queueService = QueueServiceFactory.Create();
-            //queueService.SendMessage($"Hello cloud { DateTime.Now.ToString() }");
-            //Console.WriteLine("Send Message!");
+            queueService.SendMessage($"Hello cloud { DateTime.Now.ToString() }");
+            Console.WriteLine("Send Message!");
             var msg = queueService.GetMessage(_queueName);
             Console.WriteLine("Get Message!");
             Console.WriteLine(msg.Body);

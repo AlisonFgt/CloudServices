@@ -15,7 +15,7 @@ namespace CloudServices.Services.DocumentDB
 
         private CloudTable table;
 
-        public void LoadTable()
+        public CosmosDBService()
         {
             try
             {

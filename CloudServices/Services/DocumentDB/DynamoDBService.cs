@@ -12,7 +12,7 @@ namespace CloudServices.Services.DocumentDB
 
         private static Table table;
 
-        public void LoadTable()
+        public DynamoDBService()
         {
             try
             {
