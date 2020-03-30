@@ -10,8 +10,8 @@ namespace CloudServices.Services.DocumentDB
         public MessageCosmosDB(string partitionKey, string instance, string guid, string payload)
         {
             PartitionKey = partitionKey;
+            RowKey = guid;
             Instance = instance;
-            Guid = guid;
             Payload = payload;
             CreatedAt = DateTime.Now;
         }
@@ -19,8 +19,6 @@ namespace CloudServices.Services.DocumentDB
         public string Instance { get; set; }
 
         public string Guid { get; set; }
-
-        public string PartitionKey { get; set; }
 
         public string Payload { get; set; }
 

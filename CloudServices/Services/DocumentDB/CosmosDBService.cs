@@ -22,11 +22,7 @@ namespace CloudServices.Services.DocumentDB
                 storageAccount = CloudStorageAccount.Parse(DocumentDBConnectionString);
                 CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
                 table = tableClient.GetTableReference(CosmosTableName);
-
-                if (table.CreateIfNotExistsAsync().Result)
-                    Console.WriteLine("Created Table named: {0}", CosmosTableName);
-                else
-                    Console.WriteLine("Table {0} already exists", CosmosTableName);
+                table.CreateIfNotExistsAsync().Wait();                
             }
             catch (Exception ex)
             {
@@ -40,28 +36,23 @@ namespace CloudServices.Services.DocumentDB
             {
                 TableOperation retrieveOperation = TableOperation.Retrieve<MessageCosmosDB>(partitionKey, rowKey);
                 TableResult result = table.ExecuteAsync(retrieveOperation).Result;
-                dynamic customer = result.Result as dynamic;
-                if (customer != null)
-                {
-                    Console.WriteLine("\t{0}\t{1}\t{2}\t{3}", customer.PartitionKey, customer.RowKey, customer.CreatedAt, customer.Payload);
-                    return customer;
-                }
+                MessageCosmosDB item = result.Result as MessageCosmosDB;
+                return item;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("GetItem CosmosDB", ex?.Message);
-            }
-
-            return null;
+                return null;
+            }            
         }
 
         public dynamic PutItem(IMessageDB document)
         {
             try
             {
-                if (document != null && document is TableEntity)
+                if (document != null && document is MessageCosmosDB)
                 {
-                    TableOperation insertOrMergeOperation = TableOperation.InsertOrMerge(document as TableEntity);
+                    TableOperation insertOrMergeOperation = TableOperation.InsertOrMerge(document as MessageCosmosDB);
                     TableResult result = table.ExecuteAsync(insertOrMergeOperation).Result;
                     return result.Result as IMessageDB;
                 }
@@ -78,7 +69,20 @@ namespace CloudServices.Services.DocumentDB
 
         public IMessageDB DeleteItem(string partitionKey, string rowKey)
         {
-            throw new NotImplementedException();
+            try
+            {
+                TableOperation retrieveOperation = TableOperation.Retrieve<MessageCosmosDB>(partitionKey, rowKey);
+                TableResult result = table.ExecuteAsync(retrieveOperation).Result;
+                var deleteEntity = (MessageCosmosDB)result.Result;
+                TableOperation delete = TableOperation.Delete(deleteEntity);
+                table.ExecuteAsync(delete).Wait();
+                return deleteEntity;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("DeleteItem CosmosDB", ex?.Message);
+                return null;
+            }
         }
     }
 }

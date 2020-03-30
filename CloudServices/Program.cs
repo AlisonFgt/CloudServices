@@ -42,7 +42,8 @@ namespace CloudServices
             var message = documentoDBService.GetItem(partitionKey, guid);
             Console.WriteLine(message.Payload);
             Console.WriteLine("Get Item");
-            documentoDBService.DeleteItem(partitionKey, guid);
+            var deleted = documentoDBService.DeleteItem(partitionKey, guid);
+            Console.WriteLine(deleted.Payload);
             Console.WriteLine("Delete Item");
         }
 
