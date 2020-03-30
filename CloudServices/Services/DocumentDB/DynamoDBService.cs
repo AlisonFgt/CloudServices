@@ -30,12 +30,13 @@ namespace CloudServices.Services.DocumentDB
             }
         }
 
-        public dynamic GetItem(string partitionKey, string rowKey)
+        public IMessageDB GetItem(string partitionKey, string rowKey)
         {
             try
             {
                 var guid = new Guid(rowKey);
-                return table.GetItem(partitionKey, guid);
+                var document = table.GetItem(partitionKey, guid);
+                return IMessageToDocument(document);
             }
             catch (Exception ex)
             {
@@ -44,13 +45,14 @@ namespace CloudServices.Services.DocumentDB
             }
         }
 
-        public dynamic PutItem(object document)
+        public dynamic PutItem(IMessageDB document)
         {
             try
             {
-                if (document != null && document is Document)
+                if (document != null && document is MessageDynamoDB)
                 {
-                    table.PutItem(document as Document);
+                    Document item = IMessageToDocument(document);
+                    table.PutItem(item);
                     return table;
                 }
                 else
@@ -64,6 +66,45 @@ namespace CloudServices.Services.DocumentDB
             }
 
             return null;
+        }
+
+        private static Document IMessageToDocument(IMessageDB document)
+        {
+            var item = new Document();
+
+            item["PartitionKey"] = document.PartitionKey;
+            item["Guid"] = document.Guid;
+            item["CreatedAt"] = document.CreatedAt;
+            item["Instance"] = document.Instance;
+            item["Payload"] = document.Payload;
+            return item;
+        }
+
+        private static IMessageDB IMessageToDocument(Document document)
+        {
+            var item = new MessageDynamoDB();
+
+            item.PartitionKey = document["PartitionKey"];
+            item.Guid = document["Guid"];
+            item.Instance = document["Instance"];
+            item.Payload = document["Payload"];
+            item.CreatedAt = DateTime.Parse(document["CreatedAt"]);
+            return item;
+        }
+
+        public IMessageDB DeleteItem(string partitionKey, string rowKey)
+        {
+            try
+            {
+                var guid = new Guid(rowKey);
+                var document = table.DeleteItem(partitionKey, guid);
+                return IMessageToDocument(document);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("DynamoDBService - DeleteItem", ex?.Message);
+                return null;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CloudServices.Common;
+﻿using Amazon.DynamoDBv2.DocumentModel;
+using CloudServices.Common;
 using CloudServices.Services.DocumentDB;
 using CloudServices.Services.Queue;
 using CloudServices.Services.Storage;
@@ -20,30 +21,29 @@ namespace CloudServices
                 Console.WriteLine($"Start Service in Cloud : { cloud }");
                 //StorageTest();
                 //QueueTest();
-                DocumentDBTest(cloud);
+                DocumentDBTest();
                 Console.WriteLine("Finishing Tests");
             }
             else
                 Console.WriteLine("Bad AppSettings.json");
         }
 
-        private static void DocumentDBTest(string cloud)
+        private static void DocumentDBTest()
         {
             Console.WriteLine("Start Queue Tests Azure - Service Bus || AWS - SQS");
             var documentoDBService = DocumentDBServiceFactory.Create();
-
-            if (cloud.Equals("azure"))
-            {
-                MessageCosmosDB doc = new MessageCosmosDB("12345", "HLG-HEINZ", "{\"ID\":1,\"Name\":\"Manas\",\"Address\":\"India\"}");
-                var teste = documentoDBService.PutItem(doc);
-                Console.WriteLine("Send Message!");
-                var message = documentoDBService.GetItem("12345", "HLG-HEINZ");
-                Console.WriteLine(message.Payload);
-            }
-            else
-            {
-
-            }
+            var partitionKey = "12345";
+            var instance = "HLG-HEINZ";
+            var payload = "{\"ID\":1,\"Name\":\"Alison\",\"Address\":\"Canoas\"}";
+            var guid = Guid.NewGuid().ToString();
+            IMessageDB doc = MessageFactory.Create(partitionKey, instance, guid, payload);
+            documentoDBService.PutItem(doc);
+            Console.WriteLine("Send Item!");
+            var message = documentoDBService.GetItem(partitionKey, guid);
+            Console.WriteLine(message.Payload);
+            Console.WriteLine("Get Item");
+            documentoDBService.DeleteItem(partitionKey, guid);
+            Console.WriteLine("Delete Item");
         }
 
         private static void StorageTest()

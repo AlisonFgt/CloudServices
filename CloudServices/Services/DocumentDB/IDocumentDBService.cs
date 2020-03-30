@@ -4,8 +4,10 @@ namespace CloudServices.Services.DocumentDB
 {
     public interface IDocumentDBService
     {
-        dynamic PutItem(object document);
+        dynamic PutItem(IMessageDB document);
 
-        dynamic GetItem(string partitionKey, string rowKey);
+        IMessageDB GetItem(string partitionKey, string rowKey);
+
+        IMessageDB DeleteItem(string partitionKey, string rowKey);
     }
 }

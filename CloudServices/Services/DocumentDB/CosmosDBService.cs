@@ -34,7 +34,7 @@ namespace CloudServices.Services.DocumentDB
             }
         }
 
-        public dynamic GetItem(string partitionKey, string rowKey)
+        public IMessageDB GetItem(string partitionKey, string rowKey)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace CloudServices.Services.DocumentDB
             return null;
         }
 
-        public dynamic PutItem(object document)
+        public dynamic PutItem(IMessageDB document)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace CloudServices.Services.DocumentDB
                 {
                     TableOperation insertOrMergeOperation = TableOperation.InsertOrMerge(document as TableEntity);
                     TableResult result = table.ExecuteAsync(insertOrMergeOperation).Result;
-                    return result.Result as TableEntity;
+                    return result.Result as IMessageDB;
                 }
                 else
                     Console.WriteLine("PutItem CosmosDB - Document is null Or Document is not type TableEntity");
@@ -74,6 +74,11 @@ namespace CloudServices.Services.DocumentDB
             }
 
             return null;
+        }
+
+        public IMessageDB DeleteItem(string partitionKey, string rowKey)
+        {
+            throw new NotImplementedException();
         }
     }
 }

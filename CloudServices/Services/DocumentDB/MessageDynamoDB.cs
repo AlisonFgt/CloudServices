@@ -1,13 +1,13 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿using Amazon.DynamoDBv2.DocumentModel;
 using System;
 
 namespace CloudServices.Services.DocumentDB
 {
-    public class MessageCosmosDB : TableEntity, IMessageDB
+    public class MessageDynamoDB : Document, IMessageDB
     {
-        public MessageCosmosDB() { }
+        public MessageDynamoDB() { }
 
-        public MessageCosmosDB(string partitionKey, string instance, string guid, string payload)
+        public MessageDynamoDB(string partitionKey, string instance, string guid, string payload)
         {
             PartitionKey = partitionKey;
             Instance = instance;
