@@ -4,8 +4,8 @@ namespace CloudServices.Services.DocumentDB
 {
     public interface IDocumentDBService
     {
-        object PutItem(object document);
+        dynamic PutItem(object document);
 
-        object GetItem(string partitionKey, Guid documentId);
+        dynamic GetItem(string partitionKey, string rowKey);
     }
 }

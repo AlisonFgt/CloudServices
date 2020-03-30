@@ -34,11 +34,18 @@ namespace CloudServices.Services.DocumentDB
             }
         }
 
-        public object GetItem(string partitionKey, Guid documentId)
+        public dynamic GetItem(string partitionKey, string rowKey)
         {
             try
             {
-
+                TableOperation retrieveOperation = TableOperation.Retrieve<MessageCosmosDB>(partitionKey, rowKey);
+                TableResult result = table.ExecuteAsync(retrieveOperation).Result;
+                dynamic customer = result.Result as dynamic;
+                if (customer != null)
+                {
+                    Console.WriteLine("\t{0}\t{1}\t{2}\t{3}", customer.PartitionKey, customer.RowKey, customer.CreatedAt, customer.Payload);
+                    return customer;
+                }
             }
             catch (Exception ex)
             {
@@ -48,7 +55,7 @@ namespace CloudServices.Services.DocumentDB
             return null;
         }
 
-        public object PutItem(object document)
+        public dynamic PutItem(object document)
         {
             try
             {

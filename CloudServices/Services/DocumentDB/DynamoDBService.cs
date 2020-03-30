@@ -30,11 +30,12 @@ namespace CloudServices.Services.DocumentDB
             }
         }
 
-        public object GetItem(string partitionKey, Guid documentId)
+        public dynamic GetItem(string partitionKey, string rowKey)
         {
             try
             {
-                return table.GetItem(partitionKey, documentId);
+                var guid = new Guid(rowKey);
+                return table.GetItem(partitionKey, guid);
             }
             catch (Exception ex)
             {
@@ -43,7 +44,7 @@ namespace CloudServices.Services.DocumentDB
             }
         }
 
-        public object PutItem(object document)
+        public dynamic PutItem(object document)
         {
             try
             {

@@ -2,6 +2,7 @@
 using CloudServices.Services.DocumentDB;
 using CloudServices.Services.Queue;
 using CloudServices.Services.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.IO;
 using System.Text;
@@ -19,22 +20,30 @@ namespace CloudServices
                 Console.WriteLine($"Start Service in Cloud : { cloud }");
                 //StorageTest();
                 //QueueTest();
-                DocumentDBTest();
+                DocumentDBTest(cloud);
                 Console.WriteLine("Finishing Tests");
             }
             else
                 Console.WriteLine("Bad AppSettings.json");
         }
 
-        private static void DocumentDBTest()
+        private static void DocumentDBTest(string cloud)
         {
             Console.WriteLine("Start Queue Tests Azure - Service Bus || AWS - SQS");
             var documentoDBService = DocumentDBServiceFactory.Create();
-            documentoDBService.
-            Console.WriteLine("Send Message!");
-            Console.WriteLine("Get Message!");
-            Console.WriteLine(msg.Body);
-            Console.WriteLine("Deleted Message!");
+
+            if (cloud.Equals("azure"))
+            {
+                MessageCosmosDB doc = new MessageCosmosDB("12345", "HLG-HEINZ", "{\"ID\":1,\"Name\":\"Manas\",\"Address\":\"India\"}");
+                var teste = documentoDBService.PutItem(doc);
+                Console.WriteLine("Send Message!");
+                var message = documentoDBService.GetItem("12345", "HLG-HEINZ");
+                Console.WriteLine(message.Payload);
+            }
+            else
+            {
+
+            }
         }
 
         private static void StorageTest()
