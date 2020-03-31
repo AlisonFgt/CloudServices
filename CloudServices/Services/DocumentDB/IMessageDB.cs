@@ -13,5 +13,5 @@ namespace CloudServices.Services.DocumentDB
         public string Payload { get; set; }
 
         public DateTime CreatedAt { get; set; }
-}
+    }
 }

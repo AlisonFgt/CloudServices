@@ -43,10 +43,6 @@ namespace CloudServices.Services.Queue
             {
                 var messageReceiver = new MessageReceiver(ServiceBusConnectionString, queue, ReceiveMode.PeekLock);
                 var message = messageReceiver.ReceiveAsync().Result;
-                
-                // Process the message
-                Console.WriteLine($"Received message: SequenceNumber:{message.SystemProperties.SequenceNumber} Body:{Encoding.UTF8.GetString(message.Body)}");
-
                 // Complete the message so that it is not received again.
                 messageReceiver.CompleteAsync(message.SystemProperties.LockToken).Wait();
                 messageReceiver.CloseAsync().Wait();
@@ -67,21 +63,9 @@ namespace CloudServices.Services.Queue
 
         public bool DeleteMessage(string queue, string receiptHandle = "")
         {
-            try
-            {
-                var messageReceiver = new MessageReceiver(ServiceBusConnectionString, queue, ReceiveMode.PeekLock);
-                var message = messageReceiver.ReceiveAsync().Result;
-
-                // Complete the message so that it is not received again.
-                messageReceiver.CompleteAsync(message.SystemProperties.LockToken).Wait();
-                messageReceiver.CloseAsync().Wait();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("AzureServiceBus - GetMessage - " + ex?.Message);
-                return false;
-            }
+            // the message has already been deleted when read in line 47
+            // Complete the message so that it is not received again.
+            return true;
         }
     }
 }
