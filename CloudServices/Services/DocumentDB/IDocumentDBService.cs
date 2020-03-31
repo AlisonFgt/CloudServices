@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CloudServices.Services.DocumentDB
+﻿namespace CloudServices.Services.DocumentDB
 {
     public interface IDocumentDBService
     {
