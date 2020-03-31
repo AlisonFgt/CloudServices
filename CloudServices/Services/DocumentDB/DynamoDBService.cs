@@ -97,8 +97,8 @@ namespace CloudServices.Services.DocumentDB
             try
             {
                 var guid = new Guid(rowKey);
-                var document = table.DeleteItem(partitionKey, guid);
-                return IMessageToDocument(document);
+                table.DeleteItem(partitionKey, guid);
+                return new MessageDynamoDB();
             }
             catch (Exception ex)
             {

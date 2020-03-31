@@ -187,6 +187,9 @@ namespace CloudServices.Services.Storage
             {
                 var objectResponse = client.GetObject(bucketName, Key(directoryPath, objectName));
 
+                if (File.Exists(fileToDownloadTo))
+                    File.Delete(fileToDownloadTo);
+
                 using (var fileStream = new FileStream(fileToDownloadTo, FileMode.CreateNew, FileAccess.Write))
                 {
                     objectResponse.ResponseStream.CopyTo(fileStream);
