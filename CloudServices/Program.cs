@@ -17,8 +17,8 @@ namespace CloudServices
                 Console.WriteLine($"Starting testing cloud services in { cloud }");
                 Console.WriteLine(DateTime.Now.ToString());
                 StorageTest.Start();
-                QueueTest.Start();
-                DocumentDBTest.Start();
+                //QueueTest.Start();
+                //DocumentDBTest.Start();
                 Console.WriteLine(DateTime.Now.ToString());
                 Console.WriteLine("Finishing Tests");
             }

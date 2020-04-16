@@ -112,6 +112,7 @@ namespace CloudServices.Services.Storage
                 }
             }
         }
+
         public void Delete(string bucketNameAndDirPath, string objectName)
         {
             var splittedName = GetBucketNameAndPath(bucketNameAndDirPath);
@@ -222,6 +223,11 @@ namespace CloudServices.Services.Storage
             var bucketNameAndPrefix = completePath.Split(new[] { '/' }, 2);
 
             return new KeyValuePair<string, string>(bucketNameAndPrefix[0], bucketNameAndPrefix[1]);
+        }
+
+        public void AppendTextAsync(string containerName, string blobName, string text)
+        {
+            throw new NotImplementedException();
         }
     }
 }

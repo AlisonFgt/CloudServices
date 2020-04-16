@@ -31,6 +31,10 @@ namespace CloudServices.Services.Storage
             {
                 storageService.UploadByStream(containerName, "File.txt", msWrite);
             }
+
+            for (int i = 0; i < 3; i++)
+                storageService.AppendTextAsync(containerName, "FileAppender.txt", string.Format("Appending log number {0} to an append blob.\r\n", i));
+
             Console.WriteLine("UploadByStream to File.txt");
             storageService.Download(containerName, "File.txt", Path.Combine(pathProject, "FilesTests/File_2.txt"));
             Console.WriteLine("Download to File.txt");

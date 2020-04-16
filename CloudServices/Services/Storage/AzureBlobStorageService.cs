@@ -40,6 +40,15 @@ namespace CloudServices.Services.Storage
             return containerReference.GetBlockBlobReference(blobName);
         }
 
+        public CloudAppendBlob GetAppendBlobInContainer(string containerName, string blobName)
+        {
+            containerName = Path.Combine(_container, containerName);
+            var cloudBlobClient = DefaultAzureClient();
+            var containerReference = cloudBlobClient.GetContainerReference(containerName);
+
+            return containerReference.GetAppendBlobReference(blobName);
+        }
+
         public void Delete(string containerName, string blobName)
         {
             var cloudBlockBlob = GetBlobInContainer(containerName, blobName);
@@ -110,6 +119,16 @@ namespace CloudServices.Services.Storage
         {
             var cloudBlockBlob = GetBlobInContainer(containerName, blobName);
             cloudBlockBlob.UploadFromStreamAsync(stream);
+        }
+
+        public void AppendTextAsync(string containerName, string blobName, string text)
+        {
+            var appendBlob = GetAppendBlobInContainer(containerName, blobName);
+
+            if (!appendBlob.ExistsAsync().GetAwaiter().GetResult())
+                appendBlob.CreateOrReplaceAsync().Wait();
+
+            appendBlob.AppendTextAsync(text).Wait();
         }
 
         public bool ContainerExists(string containerName)

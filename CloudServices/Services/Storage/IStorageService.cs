@@ -14,6 +14,8 @@ namespace CloudServices.Services.Storage
 
         void UploadByStream(string containerName, string blobName, Stream stream);
 
+        void AppendTextAsync(string containerName, string blobName, string text);
+
         void Delete(string containerName, string blobName);
 
         string GetUrl(string containerName, string blobName);
