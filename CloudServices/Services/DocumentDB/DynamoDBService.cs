@@ -72,11 +72,11 @@ namespace CloudServices.Services.DocumentDB
         {
             var item = new Document();
 
-            item["PartitionKey"] = document.PartitionKey;
-            item["Guid"] = document.Guid;
-            item["CreatedAt"] = document.CreatedAt;
-            item["Instance"] = document.Instance;
-            item["Payload"] = document.Payload;
+            item["partitionKey"] = document.PartitionKey;
+            item["guid"] = document.Guid;
+            item["createdAt"] = document.CreatedAt;
+            item["instance"] = document.Instance;
+            item["payload"] = document.Payload;
             return item;
         }
 
@@ -84,11 +84,11 @@ namespace CloudServices.Services.DocumentDB
         {
             var item = new MessageDynamoDB();
 
-            item.PartitionKey = document["PartitionKey"];
-            item.Guid = document["Guid"];
-            item.Instance = document["Instance"];
-            item.Payload = document["Payload"];
-            item.CreatedAt = DateTime.Parse(document["CreatedAt"]);
+            item.PartitionKey = document["partitionKey"];
+            item.Guid = document["guid"];
+            item.Instance = document["instance"];
+            item.Payload = document["payload"];
+            item.CreatedAt = DateTime.Parse(document["createdAt"]);
             return item;
         }
 
